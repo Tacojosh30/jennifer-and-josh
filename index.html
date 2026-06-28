@@ -847,13 +847,14 @@ nav.addEventListener('click', e => {
       <path d="M11.5 5Q9.2 8 9.2 13.5" stroke="rgba(255,255,255,0.55)" stroke-width=".8" fill="none"/>
       <rect x="8.8" y="12.2" width="14.4" height="3.2" rx=".5" fill="#222a30"/>
       <rect x="14.6" y="12.2" width="2.8" height="9.8" rx=".6" fill="#222a30"/>`),
-    // 4. Darth Vader (Gallery) — domed black helmet, angled lenses
-    svg(`<path d="M16 3C22 3 23.6 9 22.6 13.5 22.2 15.4 21.4 16.6 21.4 16.6L21.8 20C20.8 23.4 18.8 26.4 16 27.8 13.2 26.4 11.2 23.4 10.2 20L10.6 16.6C10.6 16.6 9.8 15.4 9.4 13.5 8.4 9 10 3 16 3Z" fill="#0d0e11"/>
-      <path d="M10.6 13 15 14.2 11.4 16.4Z" fill="#3a3f47"/>
-      <path d="M21.4 13 17 14.2 20.6 16.4Z" fill="#3a3f47"/>
-      <path d="M16 14.6 18 20 14 20Z" fill="#2a2e34"/>
-      <path d="M13 21H19M13.6 22.7H18.4" stroke="#2a2e34" stroke-width="1"/>
-      <path d="M13 6Q11 9 11.2 12.5" stroke="rgba(255,255,255,0.16)" stroke-width="1" fill="none"/>`),
+    // 4. Darth Vader (Gallery) — domed helmet with flared base, angled lenses
+    svg(`<path d="M16 3C21.5 3 23.5 8 22.8 13 22.6 14.5 22.2 15.6 22 16.5 22.8 19 24 22.5 25.5 26 24 26.5 20 25 16 25 12 25 8 26.5 6.5 26 8 22.5 9.2 19 10 16.5 9.8 15.6 9.4 14.5 9.2 13 8.5 8 10.5 3 16 3Z" fill="#0e0f12"/>
+      <path d="M10.2 12.6 14.6 14 11 16.2Z" fill="#363b43"/>
+      <path d="M21.8 12.6 17.4 14 21 16.2Z" fill="#363b43"/>
+      <path d="M16 15 18.2 20 13.8 20Z" fill="#26292f"/>
+      <path d="M13.4 21H18.6M13.9 22.5H18.1M14.4 24H17.6" stroke="#26292f" stroke-width=".9" stroke-linecap="round"/>
+      <path d="M16 4V12" stroke="rgba(255,255,255,0.09)" stroke-width=".8"/>
+      <path d="M12.8 6Q11 9 11 12.4" stroke="rgba(255,255,255,0.14)" stroke-width="1" fill="none"/>`),
     // 5. Scout Trooper (Party) — wide wraparound visor
     svg(`<path d="${OUT}" fill="#f4f5f7"/>
       <path d="M7.4 12.2Q16 10.4 24.6 12.2L24 17Q16 19 8 17Z" fill="#15171c"/>
@@ -948,20 +949,35 @@ function drawGrogu(c, s){
 
 // --- Stormtrooper helmet ---
 function drawTrooper(c, s){
-  c.fillStyle = '#f2f3f5';
+  // shell
+  c.fillStyle = '#f4f5f7';
   c.beginPath(); c.moveTo(-s*0.6,-s*0.2);
   c.quadraticCurveTo(-s*0.6,-s*0.95,0,-s*0.95);
   c.quadraticCurveTo(s*0.6,-s*0.95,s*0.6,-s*0.2);
   c.quadraticCurveTo(s*0.55,s*0.5,0,s*0.95);
   c.quadraticCurveTo(-s*0.55,s*0.5,-s*0.6,-s*0.2); c.closePath(); c.fill();
-  c.fillStyle = '#15171c';                                  // eyes
-  c.beginPath(); c.moveTo(-s*0.5,-s*0.18); c.lineTo(-s*0.12,-s*0.06);
-  c.lineTo(-s*0.12,s*0.16); c.lineTo(-s*0.46,s*0.1); c.closePath(); c.fill();
-  c.beginPath(); c.moveTo(s*0.5,-s*0.18); c.lineTo(s*0.12,-s*0.06);
-  c.lineTo(s*0.12,s*0.16); c.lineTo(s*0.46,s*0.1); c.closePath(); c.fill();
-  c.fillRect(-s*0.2,s*0.34,s*0.4,s*0.3);                    // mouth vent
-  c.fillStyle = '#f2f3f5';
-  c.fillRect(-s*0.06,s*0.34,s*0.03,s*0.3); c.fillRect(s*0.05,s*0.34,s*0.03,s*0.3);
+  // brow band (dips in the middle)
+  c.fillStyle = '#15171c';
+  c.beginPath(); c.moveTo(-s*0.52,-s*0.26);
+  c.quadraticCurveTo(0,-s*0.06,s*0.52,-s*0.26);
+  c.lineTo(s*0.52,-s*0.12);
+  c.quadraticCurveTo(0,s*0.08,-s*0.52,-s*0.12); c.closePath(); c.fill();
+  // angular frown eyes
+  c.beginPath(); c.moveTo(-s*0.5,-s*0.1); c.lineTo(-s*0.14,0);
+  c.lineTo(-s*0.14,s*0.18); c.lineTo(-s*0.46,s*0.08); c.closePath(); c.fill();
+  c.beginPath(); c.moveTo(s*0.5,-s*0.1); c.lineTo(s*0.14,0);
+  c.lineTo(s*0.14,s*0.18); c.lineTo(s*0.46,s*0.08); c.closePath(); c.fill();
+  // nose ridge (grey)
+  c.fillStyle = '#c2c7cf'; c.fillRect(-s*0.05, 0, s*0.1, s*0.34);
+  // grille mouth (trapezoid frown)
+  c.fillStyle = '#15171c';
+  c.beginPath(); c.moveTo(-s*0.26,s*0.36); c.lineTo(s*0.26,s*0.36);
+  c.lineTo(s*0.2,s*0.62); c.lineTo(-s*0.2,s*0.62); c.closePath(); c.fill();
+  // teeth
+  c.strokeStyle = '#f4f5f7'; c.lineWidth = s*0.05;
+  c.beginPath();
+  for (let i=-1;i<=1;i++){ const x=i*s*0.13; c.moveTo(x,s*0.36); c.lineTo(x,s*0.62); }
+  c.stroke();
 }
 
 // --- Darth Vader helmet ---
