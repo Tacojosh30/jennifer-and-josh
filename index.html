@@ -847,14 +847,14 @@ nav.addEventListener('click', e => {
       <path d="M11.5 5Q9.2 8 9.2 13.5" stroke="rgba(255,255,255,0.55)" stroke-width=".8" fill="none"/>
       <rect x="8.8" y="12.2" width="14.4" height="3.2" rx=".5" fill="#222a30"/>
       <rect x="14.6" y="12.2" width="2.8" height="9.8" rx=".6" fill="#222a30"/>`),
-    // 4. Darth Vader (Gallery) — domed helmet with flared base, angled lenses
-    svg(`<path d="M16 3C21.5 3 23.5 8 22.8 13 22.6 14.5 22.2 15.6 22 16.5 22.8 19 24 22.5 25.5 26 24 26.5 20 25 16 25 12 25 8 26.5 6.5 26 8 22.5 9.2 19 10 16.5 9.8 15.6 9.4 14.5 9.2 13 8.5 8 10.5 3 16 3Z" fill="#0e0f12"/>
-      <path d="M10.2 12.6 14.6 14 11 16.2Z" fill="#363b43"/>
-      <path d="M21.8 12.6 17.4 14 21 16.2Z" fill="#363b43"/>
-      <path d="M16 15 18.2 20 13.8 20Z" fill="#26292f"/>
-      <path d="M13.4 21H18.6M13.9 22.5H18.1M14.4 24H17.6" stroke="#26292f" stroke-width=".9" stroke-linecap="round"/>
-      <path d="M16 4V12" stroke="rgba(255,255,255,0.09)" stroke-width=".8"/>
-      <path d="M12.8 6Q11 9 11 12.4" stroke="rgba(255,255,255,0.14)" stroke-width="1" fill="none"/>`),
+    // 4. Darth Vader (Gallery) — domed helmet with wide flared base
+    svg(`<path d="M16 2.6C22 2.6 24 7.5 23.2 12.8 23 14.2 22.5 15.4 22.2 16.2 23.4 18.5 25.6 22 27 26.5 25 27 21 25.2 16 25.2 11 25.2 7 27 5 26.5 6.4 22 8.6 18.5 9.8 16.2 9.5 15.4 9 14.2 8.8 12.8 8 7.5 10 2.6 16 2.6Z" fill="#0e0f12"/>
+      <path d="M9.8 12.4 14.8 13.8 11 16.4Z" fill="#363b43"/>
+      <path d="M22.2 12.4 17.2 13.8 21 16.4Z" fill="#363b43"/>
+      <path d="M16 14.8 18.4 20 13.6 20Z" fill="#26292f"/>
+      <path d="M13.2 21H18.8M13.7 22.5H18.3M14.2 24H17.8" stroke="#26292f" stroke-width=".9" stroke-linecap="round"/>
+      <path d="M16 3.6V12" stroke="rgba(255,255,255,0.09)" stroke-width=".8"/>
+      <path d="M12.6 6Q10.8 9 10.8 12.4" stroke="rgba(255,255,255,0.14)" stroke-width="1" fill="none"/>`),
     // 5. Scout Trooper (Party) — wide wraparound visor
     svg(`<path d="${OUT}" fill="#f4f5f7"/>
       <path d="M7.4 12.2Q16 10.4 24.6 12.2L24 17Q16 19 8 17Z" fill="#15171c"/>
@@ -930,7 +930,7 @@ sizeCon(); addEventListener('resize', sizeCon);
 const SABER_COLORS = ['#4da8ff','#57ff8a','#ff4d4d','#c46bff','#ffe81f'];
 const PASTELS = ['#f8c1d0','#ffd9b8','#fbe6a0','#bfe6cf','#d6c2ef','#c6dcf2','#f7c9e3','#cdeccf'];
 // shape mix (flowers & Grogu appear a little more often):
-const TYPES = ['grogu','trooper','vader','saber','grogu','flower','flower','flower','saber'];
+const TYPES = ['grogu','trooper','vader','mando','boba','saber','grogu','flower','flower','flower','saber'];
 
 // --- Grogu (Baby Yoda) ---
 function drawGrogu(c, s){
@@ -999,6 +999,49 @@ function drawVader(c, s){
   c.beginPath(); c.ellipse(-s*0.22,-s*0.5,s*0.12,s*0.26,0.3,0,6.2832); c.fill();
 }
 
+// --- Mandalorian helmet ---
+function drawMando(c, s){
+  c.fillStyle = '#c3c8cf';
+  c.beginPath(); c.moveTo(-s*0.58,-s*0.18);
+  c.quadraticCurveTo(-s*0.58,-s*0.92,0,-s*0.92);
+  c.quadraticCurveTo(s*0.58,-s*0.92,s*0.58,-s*0.18);
+  c.quadraticCurveTo(s*0.5,s*0.55,0,s*0.95);
+  c.quadraticCurveTo(-s*0.5,s*0.55,-s*0.58,-s*0.18); c.closePath(); c.fill();
+  c.fillStyle = 'rgba(0,0,0,0.10)';                          // metallic shading
+  c.beginPath(); c.moveTo(s*0.06,-s*0.9);
+  c.quadraticCurveTo(s*0.58,-s*0.6,s*0.5,s*0.5);
+  c.quadraticCurveTo(s*0.3,s*0.82,0,s*0.95);
+  c.quadraticCurveTo(s*0.36,s*0.4,s*0.06,-s*0.9); c.closePath(); c.fill();
+  c.strokeStyle = 'rgba(255,255,255,0.55)'; c.lineWidth = s*0.05; c.lineCap = 'round';
+  c.beginPath(); c.moveTo(-s*0.32,-s*0.66); c.quadraticCurveTo(-s*0.5,-s*0.3,-s*0.5,s*0.05); c.stroke();
+  c.fillStyle = '#222a30';                                   // T-visor
+  c.fillRect(-s*0.45,-s*0.16,s*0.9,s*0.2);
+  c.fillRect(-s*0.1,-s*0.16,s*0.2,s*0.62);
+}
+
+// --- Boba Fett helmet ---
+function drawBoba(c, s){
+  c.fillStyle = '#6f7d63';
+  c.beginPath(); c.moveTo(-s*0.58,-s*0.18);
+  c.quadraticCurveTo(-s*0.58,-s*0.92,0,-s*0.92);
+  c.quadraticCurveTo(s*0.58,-s*0.92,s*0.58,-s*0.18);
+  c.quadraticCurveTo(s*0.5,s*0.55,0,s*0.95);
+  c.quadraticCurveTo(-s*0.5,s*0.55,-s*0.58,-s*0.18); c.closePath(); c.fill();
+  c.fillStyle = '#59664f';                                   // lower faceplate
+  c.beginPath(); c.moveTo(-s*0.5,0);
+  c.quadraticCurveTo(0,s*0.12,s*0.5,0);
+  c.quadraticCurveTo(s*0.42,s*0.6,0,s*0.95);
+  c.quadraticCurveTo(-s*0.42,s*0.6,-s*0.5,0); c.closePath(); c.fill();
+  c.fillStyle = '#1d2a31';                                   // T-visor
+  c.fillRect(-s*0.46,-s*0.16,s*0.92,s*0.2);
+  c.fillRect(-s*0.12,-s*0.16,s*0.24,s*0.56);
+  c.strokeStyle = '#46523c'; c.lineWidth = s*0.04;           // weathering
+  c.beginPath(); c.moveTo(-s*0.2,s*0.2); c.lineTo(-s*0.12,s*0.4); c.moveTo(s*0.22,-s*0.45); c.lineTo(s*0.28,-s*0.25); c.stroke();
+  c.strokeStyle = '#3c4a36'; c.lineWidth = s*0.07; c.lineCap = 'round';  // rangefinder antenna
+  c.beginPath(); c.moveTo(-s*0.36,-s*0.78); c.lineTo(-s*0.36,-s*1.12); c.lineTo(-s*0.1,-s*1.05); c.stroke();
+  c.fillStyle = '#46523c'; c.beginPath(); c.arc(-s*0.36,-s*0.78,s*0.1,0,6.2832); c.fill();
+}
+
 // --- Lightsaber ---
 function drawSaber(c, s, color){
   c.fillStyle = '#9aa0a6';                                  // hilt
@@ -1060,7 +1103,7 @@ function makeSprite(fn){
   x.shadowColor = 'rgba(0,0,0,0.28)'; x.shadowBlur = 4*devicePixelRatio; x.shadowOffsetY = 2*devicePixelRatio;
   fn(x, S0*devicePixelRatio); return cv;
 }
-const SPRITES = { grogu: makeSprite(drawGrogu), trooper: makeSprite(drawTrooper), vader: makeSprite(drawVader) };
+const SPRITES = { grogu: makeSprite(drawGrogu), trooper: makeSprite(drawTrooper), vader: makeSprite(drawVader), mando: makeSprite(drawMando), boba: makeSprite(drawBoba) };
 const SABER_SPRITES = SABER_COLORS.map(col => makeSprite((x,s) => drawSaber(x, s, col)));
 const FLOWER_SPRITES = [];
 FLOWER_SHAPES.forEach(fn => PASTELS.forEach(col => FLOWER_SPRITES.push(makeSprite((x,s) => fn(x, s, col)))));
