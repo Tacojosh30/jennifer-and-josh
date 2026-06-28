@@ -501,9 +501,11 @@
   <section id="registry"><div class="inner center">
     <p class="kicker reveal">Gifts</p>
     <h2 class="title reveal">Registry</h2>
-    <p class="sub reveal" id="registryNote"></p>
     <div class="saber-sm reveal"></div>
-    <div class="grid three reveal" id="registries"></div>
+    <div class="form-wrap reveal" style="text-align:center; padding:52px 30px;">
+      <p style="font-family:'Great Vibes',cursive; font-size:clamp(42px,8vw,68px); line-height:1; color:var(--text);">Coming soon&hellip;</p>
+      <p class="sub" style="margin:14px auto 0;">We're still putting our registry together &mdash; check back soon.</p>
+    </div>
   </div></section>
 
   <!-- ===== GALLERY ===== -->
@@ -704,14 +706,7 @@ $('#hotels').innerHTML = CONFIG.hotels.map(h => `
     ${h.link ? `<a class="btn-link" href="${esc(h.link)}" target="_blank" rel="noopener">${esc(h.linkText||'Book')}</a>` : ''}
   </div>`).join('');
 
-// registry
-$('#registries').innerHTML = CONFIG.registries.map(r => `
-  <div class="card">
-    <h3>${esc(r.name)}</h3>
-    <p>${esc(r.note)}</p>
-    ${r.handle ? `<p class="reg-handle">${esc(r.handle)}</p>` : ''}
-    ${r.link ? `<a class="btn-link" href="${esc(r.link)}" target="_blank" rel="noopener">${esc(r.linkText || 'Visit →')}</a>` : ''}
-  </div>`).join('');
+// registry — showing "Coming soon" for now (CONFIG.registries kept for later)
 
 // gallery — grouped by subfolder; balanced multi-column mosaic with even bottoms (WithJoy-style)
 const galleryGroups = (window.PHOTOS && window.PHOTOS.galleryGroups && window.PHOTOS.galleryGroups.length)
