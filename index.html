@@ -304,7 +304,9 @@
 
   /* ---------- WEDDING PARTY ---------- */
   .party { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr));
-    gap: 22px; margin-top: 50px; }
+    gap: 22px; margin-top: 26px; }
+  .party-group-title { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600;
+    font-size: clamp(22px, 3.4vw, 30px); color: var(--text); margin: 34px 0 0; }
   .person { text-align: center; }
   .person .avatar { width: 110px; height: 110px; border-radius: 50%; margin: 0 auto 12px;
     background: linear-gradient(135deg, #dfe1e4, #cdd1d5); border: 1px solid var(--border);
@@ -521,7 +523,11 @@
     <p class="kicker reveal">The Crew</p>
     <h2 class="title reveal">Wedding Party</h2>
     <div class="saber-sm reveal"></div>
-    <div class="party reveal" id="partyGrid"></div>
+    <h3 class="party-group-title reveal">Bridesmaids</h3>
+    <div class="party reveal" id="bridesmaidsGrid"></div>
+    <div class="saber-sm reveal" style="margin-top:48px"></div>
+    <h3 class="party-group-title reveal">Groomcrew</h3>
+    <div class="party reveal" id="groomcrewGrid"></div>
   </div></section>
 
   <!-- ===== FAQ ===== -->
@@ -620,12 +626,21 @@ const CONFIG = {
   // This array is only a fallback if photos.js is missing.
   gallery: [],
 
-  // --- WEDDING PARTY ---
-  party: [
-    { name: "Luke", role: "Best Man", note: "Brother of the bride", img: "" },
-    { name: "Chewbacca", role: "Groomsman", note: "Oldest friend", img: "" },
-    { name: "Padmé", role: "Maid of Honor", note: "Sister of the bride", img: "" },
-    { name: "Ahsoka", role: "Bridesmaid", note: "College roommate", img: "" },
+  // --- WEDDING PARTY (two groups) ---
+  bridesmaids: [
+    { name: "Name", role: "Maid of Honor", note: "", img: "" },
+    { name: "Name", role: "Bridesmaid", note: "", img: "" },
+    { name: "Name", role: "Bridesmaid", note: "", img: "" },
+    { name: "Name", role: "Bridesmaid", note: "", img: "" },
+    { name: "Name", role: "Bridesmaid", note: "", img: "" },
+    { name: "Name", role: "Bridesmaid", note: "", img: "" },
+  ],
+  groomcrew: [
+    { name: "Name", role: "Best Man", note: "", img: "" },
+    { name: "Name", role: "Groomcrew", note: "", img: "" },
+    { name: "Name", role: "Groomcrew", note: "", img: "" },
+    { name: "Name", role: "Groomcrew", note: "", img: "" },
+    { name: "Name", role: "Groomcrew", note: "", img: "" },
   ],
 
   // --- FAQ ---
@@ -768,14 +783,19 @@ gg.addEventListener('click', e => {
 });
 $('#lightbox').addEventListener('click', () => $('#lightbox').classList.remove('open'));
 
-// party
-$('#partyGrid').innerHTML = CONFIG.party.map(p => `
-  <div class="person">
-    ${p.img ? `<img class="avatar" src="${esc(p.img)}" alt="${esc(p.name)}">` : `<div class="avatar"></div>`}
-    <div class="pname">${esc(p.name)}</div>
-    <div class="prole">${esc(p.role)}</div>
-    <div class="pnote">${esc(p.note||'')}</div>
-  </div>`).join('');
+// wedding party — two groups
+function renderParty(id, people){
+  const el = $('#'+id); if (!el) return;
+  el.innerHTML = (people||[]).map(p => `
+    <div class="person">
+      ${p.img ? `<img class="avatar" src="${esc(p.img)}" alt="${esc(p.name)}">` : `<div class="avatar"></div>`}
+      <div class="pname">${esc(p.name)}</div>
+      <div class="prole">${esc(p.role)}</div>
+      <div class="pnote">${esc(p.note||'')}</div>
+    </div>`).join('');
+}
+renderParty('bridesmaidsGrid', CONFIG.bridesmaids);
+renderParty('groomcrewGrid', CONFIG.groomcrew);
 
 // faq
 $('#faqList').innerHTML = CONFIG.faq.map(f => `
