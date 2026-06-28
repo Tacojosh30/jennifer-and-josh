@@ -737,7 +737,7 @@ function renderGallery(){
       const factor = c.content > 0 ? avail / c.content : 1;
       c.items.forEach(it => {
         const fig = document.createElement('figure'); fig.style.height = (it.dh * factor) + 'px';
-        const img = document.createElement('img'); img.src = it.src; img.alt = ''; img.loading = 'lazy';
+        const img = document.createElement('img'); img.src = it.src; img.alt = ''; img.decoding = 'async';
         fig.appendChild(img); c.el.appendChild(fig);
       });
     });
