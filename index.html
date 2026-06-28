@@ -36,8 +36,7 @@
     color: var(--text);
     font-family: 'Inter', system-ui, sans-serif;
     font-weight: 300;
-    overflow-x: hidden;
-    position: relative;
+    overflow-x: clip;
     line-height: 1.6;
   }
   #starfield, #confetti { position: fixed; inset: 0; width: 100%; height: 100%; }
@@ -506,7 +505,7 @@
     <p class="kicker reveal">Moments</p>
     <h2 class="title reveal">Gallery</h2>
     <div class="saber-sm reveal"></div>
-    <div class="gallery-wrap reveal" id="galleryGrid"></div>
+    <div class="gallery-wrap" id="galleryGrid"></div>
   </div></section>
 
   <!-- ===== WEDDING PARTY ===== -->
@@ -736,8 +735,10 @@ function renderGallery(){
       const avail = H - gap * Math.max(0, c.items.length - 1);
       const factor = c.content > 0 ? avail / c.content : 1;
       c.items.forEach(it => {
-        const fig = document.createElement('figure'); fig.style.height = (it.dh * factor) + 'px';
+        const fh = Math.max(120, it.dh * factor);
+        const fig = document.createElement('figure'); fig.style.height = fh + 'px';
         const img = document.createElement('img'); img.src = it.src; img.alt = ''; img.decoding = 'async';
+        img.width = Math.round(colW); img.height = Math.round(fh);   // intrinsic size so iOS decodes/paints
         fig.appendChild(img); c.el.appendChild(fig);
       });
     });
@@ -746,7 +747,13 @@ function renderGallery(){
 }
 renderGallery();
 addEventListener('load', renderGallery);   // re-measure once everything has settled (mobile)
-let galRz; addEventListener('resize', () => { clearTimeout(galRz); galRz = setTimeout(renderGallery, 150); });
+// only rebuild on a real WIDTH change — iOS fires 'resize' on every address-bar show/hide while scrolling
+let galRz, lastGalW = innerWidth;
+addEventListener('resize', () => {
+  if (innerWidth === lastGalW) return;
+  lastGalW = innerWidth;
+  clearTimeout(galRz); galRz = setTimeout(renderGallery, 150);
+});
 gg.addEventListener('click', e => {
   const img = e.target.closest('figure')?.querySelector('img');
   if (img && img.src){ $('#lightboxImg').src = img.src; $('#lightbox').classList.add('open'); }
