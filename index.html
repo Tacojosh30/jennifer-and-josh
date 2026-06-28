@@ -241,6 +241,8 @@
   .strip-track { display: flex; width: max-content; will-change: transform;
     animation: marquee 55s linear infinite; }
   .photo-strip:hover .strip-track { animation-play-state: paused; }
+  .story-ribbon { width: 100vw; margin-left: calc(50% - 50vw); overflow: hidden; margin-top: 38px; margin-bottom: 6px; }
+  .story-ribbon:hover .strip-track { animation-play-state: paused; }
   .strip-item { flex: 0 0 auto; height: clamp(180px, 26vw, 300px); aspect-ratio: 4/3;
     margin-right: 0; border-radius: 0; overflow: hidden; border: none;
     background: linear-gradient(135deg, #dfe1e4, #cdd1d5); }
@@ -477,6 +479,7 @@
   <section id="story"><div class="inner center">
     <p class="kicker reveal">The Bride &amp; Groom</p>
     <h2 class="title reveal">Our Story</h2>
+    <div class="story-ribbon" aria-label="Our story photos"><div class="strip-track" id="storyStripTrack"></div></div>
     <div class="saber-sm reveal"></div>
     <div class="story-qa" id="timeline"></div>
     <p class="story-outro reveal" id="storyOutro"></p>
@@ -672,16 +675,22 @@ $('#timeline').innerHTML = CONFIG.story.map(s => {
 }).join('');
 if (CONFIG.storyOutro) txt('#storyOutro', CONFIG.storyOutro);
 
-// home photo strip (duplicated so the marquee loops seamlessly)
-(function buildStrip(){
-  const track = $('#stripTrack'); if (!track) return;
-  const photos = (window.PHOTOS && window.PHOTOS.strip && window.PHOTOS.strip.length) ? window.PHOTOS.strip
-               : (CONFIG.homeStrip && CONFIG.homeStrip.length) ? CONFIG.homeStrip : null;
-  const items = photos
-    ? photos.map(src => `<figure class="strip-item"><img src="${esc(src)}" alt="" loading="lazy"></figure>`).join('')
-    : Array.from({length:6}, () => `<figure class="strip-item ph"><span>Your photo</span></figure>`).join('');
+// photo ribbons (duplicated so the marquee loops seamlessly)
+function buildStripInto(trackId, photos){
+  const track = $('#' + trackId); if (!track) return;
+  if (!photos || !photos.length){
+    const ph = Array.from({length:6}, () => `<figure class="strip-item ph"><span>Your photo</span></figure>`).join('');
+    track.innerHTML = ph + ph; return;
+  }
+  let list = photos.slice();
+  while (list.length < 8) list = list.concat(photos);     // ensure one copy is wide enough to fill any screen
+  const items = list.map(src => `<figure class="strip-item"><img src="${esc(src)}" alt="" loading="lazy"></figure>`).join('');
   track.innerHTML = items + items;
-})();
+  track.style.animationDuration = (list.length * 10) + 's';   // keep scroll speed consistent regardless of photo count
+}
+buildStripInto('stripTrack', (window.PHOTOS && window.PHOTOS.strip && window.PHOTOS.strip.length) ? window.PHOTOS.strip
+             : (CONFIG.homeStrip && CONFIG.homeStrip.length ? CONFIG.homeStrip : null));
+buildStripInto('storyStripTrack', (window.PHOTOS && window.PHOTOS.storyStrip && window.PHOTOS.storyStrip.length) ? window.PHOTOS.storyStrip : null);
 
 // hotels
 $('#hotels').innerHTML = CONFIG.hotels.map(h => `

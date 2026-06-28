@@ -56,5 +56,11 @@ window.PHOTOS = {
     "photos/strip/_LEE0835.JPG",
     "photos/strip/_LEE0802.JPG",
     "photos/strip/_LEE0669.JPG",
+  ],
+  storyStrip: [
+    "photos/Story/GLEE0005.JPG",
+    "photos/Story/GLEE0009.JPG",
+    "photos/Story/GLEE0095.JPG",
+    "photos/Story/GLEE0199.JPG",
   ]
 };
