@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A New Hope · Our Wedding</title>
+<meta name="description" content="Two become one, in a galaxy far, far away." />
+
+<!-- ============================================================= -->
+<!--  EDIT EVERYTHING IN THE CONFIG BLOCK near the bottom <script> -->
+<!-- ============================================================= -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Orbitron:wght@500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+<style>
+  :root {
+    --gold: #f1e96b;            /* soft pastel lemon: buttons, saber dividers, glows */
+    --accent: #7a5c00;          /* readable brass-gold for text on the light hull */
+    --on-gold: #1c1d10;         /* dark text that sits on a gold fill */
+    --bg: #cdd1d5;              /* light Millennium Falcon hull gray */
+    --bg2: #e8eaec;
+    --panel: rgba(255,255,255,0.55);
+    --border: rgba(20,24,31,0.14);
+    --text: #20242b;
+    --muted: #586069;
+    --saber-blue: #2f7fd6;
+    --saber-red: #d63a3a;
+    --saber-green: #2fae57;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: radial-gradient(ellipse 120% 80% at 50% -10%, var(--bg2), var(--bg) 55%);
+    color: var(--text);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    position: relative;
+    line-height: 1.6;
+  }
+  #starfield, #confetti { position: fixed; inset: 0; width: 100%; height: 100%; }
+  #starfield { z-index: 0; }
+  #confetti { z-index: 90; pointer-events: none; }
+  body::before {
+    content: ""; position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    background:
+      radial-gradient(ellipse 90% 60% at 50% -10%, rgba(255,255,255,0.5), transparent 60%),
+      radial-gradient(ellipse 100% 80% at 50% 120%, rgba(20,24,31,0.10), transparent 60%);
+  }
+
+  /* ---------- STAR WARS INTRO LOADER ---------- */
+  #intro { position: fixed; inset: 0; z-index: 2000; background: #000; color: #fff;
+    display: flex; align-items: center; justify-content: center; text-align: center; overflow: hidden; }
+  #intro.done { opacity: 0; visibility: hidden; transition: opacity .8s ease, visibility .8s; }
+  body.intro-active { overflow: hidden; }
+  #intro::before {
+    content: ""; position: absolute; inset: 0; opacity: .55;
+    background-image:
+      radial-gradient(1px 1px at 20% 30%, #fff, transparent),
+      radial-gradient(1px 1px at 70% 60%, #fff, transparent),
+      radial-gradient(1px 1px at 40% 80%, #cfd3da, transparent),
+      radial-gradient(1px 1px at 85% 25%, #fff, transparent),
+      radial-gradient(1px 1px at 55% 12%, #b9bdc6, transparent),
+      radial-gradient(1px 1px at 12% 70%, #fff, transparent),
+      radial-gradient(1px 1px at 90% 85%, #dfe2e7, transparent),
+      radial-gradient(1px 1px at 33% 50%, #fff, transparent); }
+  .intro-blue { position: absolute; max-width: 80%; color: #4ea8de;
+    font-family: 'Inter', sans-serif; font-weight: 400; line-height: 1.5;
+    font-size: clamp(18px, 3vw, 30px); opacity: 0; animation: introBlue 3.2s ease forwards; }
+  @keyframes introBlue { 0%{opacity:0;} 18%{opacity:1;} 76%{opacity:1;} 100%{opacity:0;} }
+  .intro-logo { position: absolute; opacity: 0; transform: scale(2.8);
+    animation: introLogo 3.4s ease-in forwards 3.2s; }
+  .intro-logo .il-names { font-family: 'Orbitron', sans-serif; font-weight: 700; color: var(--gold);
+    font-size: clamp(36px, 8vw, 96px); line-height: 1; letter-spacing: .02em; white-space: nowrap;
+    text-shadow: 0 0 34px rgba(241,233,107,.45); }
+  .intro-logo .il-sub { font-family: 'Orbitron', sans-serif; color: var(--gold); margin-top: 12px;
+    font-size: clamp(11px, 1.7vw, 17px); letter-spacing: .42em; text-transform: uppercase; opacity: .92; }
+  @keyframes introLogo {
+    0%{opacity:0; transform:scale(2.8);} 12%{opacity:1;} 84%{opacity:1;} 100%{opacity:0; transform:scale(.12);} }
+  #introSkip { position: absolute; bottom: 24px; right: 26px; z-index: 3; cursor: pointer;
+    background: none; border: 1px solid rgba(255,255,255,.4); color: rgba(255,255,255,.8);
+    font-family: 'Orbitron', sans-serif; font-size: 11px; letter-spacing: .15em; text-transform: uppercase;
+    padding: 8px 14px; border-radius: 999px; transition: border-color .2s, color .2s; }
+  #introSkip:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* ---------- NAV ---------- */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 60;
+    display: flex; align-items: center; justify-content: center; gap: 4px;
+    padding: 12px 16px;
+    background: rgba(5,6,10,0);
+    backdrop-filter: blur(0px);
+    transition: background .3s ease, backdrop-filter .3s ease, border-color .3s ease;
+    border-bottom: 1px solid transparent;
+    flex-wrap: wrap;
+  }
+  nav.solid {
+    background: rgba(231,233,235,0.8);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+  nav a {
+    color: var(--muted); text-decoration: none;
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    padding: 7px 11px; border-radius: 16px; transition: color .2s, background .2s;
+    font-family: 'Orbitron', sans-serif; font-weight: 500;
+    display: flex; flex-direction: column; align-items: center; gap: 5px; line-height: 1;
+  }
+  nav a:hover { color: var(--text); }
+  nav a.rsvp { color: var(--on-gold); background: var(--gold); }
+  nav a.rsvp:hover { color: var(--on-gold); filter: brightness(1.08); }
+  nav .trooper { width: 26px; height: 26px; display: block;
+    transition: transform .2s ease, filter .2s ease; }
+  nav a:hover .trooper { transform: translateY(-1px) scale(1.08);
+    filter: drop-shadow(0 0 6px rgba(241,233,107,0.55)); }
+
+  /* ---------- SHARED ---------- */
+  section { position: relative; z-index: 10; padding: 110px 24px; scroll-margin-top: 84px; }
+  .inner { max-width: 980px; margin: 0 auto; }
+  .center { text-align: center; }
+  .kicker {
+    font-family: 'Orbitron', sans-serif; font-weight: 500;
+    letter-spacing: 0.5em; text-transform: uppercase;
+    font-size: 11px; color: var(--accent);
+  }
+  h2.title {
+    font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600;
+    font-size: clamp(32px, 5.5vw, 54px); color: var(--text); margin: 12px 0 8px;
+    letter-spacing: 0.01em;
+  }
+  .sub { color: var(--muted); max-width: 54ch; margin: 0 auto; }
+  .saber-sm {
+    height: 3px; width: 120px; margin: 26px auto 0; border-radius: 3px;
+    background: linear-gradient(90deg, transparent, var(--gold), #fff, var(--gold), transparent);
+    box-shadow: 0 0 14px 2px rgba(241,233,107,0.5);
+  }
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity .8s ease, transform .8s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* ---------- HERO ---------- */
+  .hero {
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; text-align: center; padding: 90px 24px 70px;
+    position: relative; overflow: hidden;
+  }
+  .falcon-bg {
+    position: absolute; inset: 0; z-index: 0; pointer-events: none;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .falcon {
+    width: min(720px, 94vw); height: auto; color: #39414c; opacity: 0.12;
+    transform: translateY(16%);
+    filter: drop-shadow(0 2px 30px rgba(0,0,0,0.12));
+    animation: floaty 9s ease-in-out infinite;
+  }
+  .hero-content {
+    position: relative; z-index: 1;
+    display: flex; flex-direction: column; align-items: center;
+  }
+  @keyframes floaty { 0%,100% { transform: translateY(16%); } 50% { transform: translateY(19%); } }
+  .hero .eyebrow {
+    font-family: 'Orbitron', sans-serif; font-weight: 500; letter-spacing: 0.55em;
+    text-transform: uppercase; font-size: clamp(10px,1.4vw,13px); color: var(--accent);
+    opacity: 0; animation: rise 1s ease forwards 0.2s;
+  }
+  .hero .names {
+    font-family: 'Great Vibes', 'Cormorant Garamond', cursive; font-weight: 400; line-height: 1.04;
+    font-size: clamp(58px, 13vw, 144px); margin: 10px 0 6px; color: var(--text);
+    letter-spacing: 0.01em;
+    opacity: 0; animation: rise 1.1s ease forwards 0.45s;
+  }
+  .amp { display: block; font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: 0.38em; color: var(--accent); font-weight: 500; margin: 2px 0; }
+  .hero .tagline {
+    color: var(--muted); font-size: clamp(13px,2vw,18px); font-style: italic;
+    max-width: 36ch; margin: 10px auto 0;
+    opacity: 0; animation: rise 1.1s ease forwards 0.7s;
+  }
+  .hero .saber {
+    height: 3px; width: 0; margin: 38px auto 34px; border-radius: 3px;
+    background: linear-gradient(90deg, transparent, var(--gold), #fff, var(--gold), transparent);
+    box-shadow: 0 0 14px 2px rgba(241,233,107,0.55);
+    animation: ignite 0.9s cubic-bezier(.2,.8,.2,1) forwards 0.95s;
+  }
+  .hero .date {
+    font-family: 'Orbitron', sans-serif; letter-spacing: 0.3em; text-transform: uppercase;
+    font-size: clamp(12px,1.8vw,16px);
+    opacity: 0; animation: rise 1.1s ease forwards 1.05s;
+  }
+  .hero .venue { color: var(--muted); font-size: clamp(12px,1.6vw,15px); margin-top: 8px;
+    opacity: 0; animation: rise 1.1s ease forwards 1.2s; }
+
+  .countdown { display: flex; gap: clamp(10px,3vw,30px); margin-top: 20px;
+    opacity: 0; animation: rise 1.1s ease forwards 1.35s; }
+  .unit { min-width: 60px; }
+  .unit .num { font-family: 'Orbitron', sans-serif; font-weight: 700;
+    font-size: clamp(24px,5vw,46px); color: #2a2e35; font-variant-numeric: tabular-nums; }
+  .unit .lbl { display: block; margin-top: 6px; font-size: 10px; letter-spacing: 0.25em;
+    text-transform: uppercase; color: var(--muted); }
+  .hero .cta {
+    margin-top: 24px; font-family: 'Orbitron', sans-serif; font-weight: 500;
+    letter-spacing: 0.18em; text-transform: uppercase; font-size: 12px; color: var(--on-gold);
+    background: var(--gold); border: none; padding: 14px 26px; border-radius: 999px;
+    cursor: pointer; transition: transform .15s, box-shadow .15s; text-decoration: none;
+    opacity: 0; animation: rise 1.1s ease forwards 1.5s;
+  }
+  .hero .cta:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(241,233,107,0.35); }
+
+  /* ---------- STORY TIMELINE ---------- */
+  .timeline { margin-top: 54px; position: relative; }
+  .timeline::before { content: ""; position: absolute; left: 50%; top: 0; bottom: 0; width: 2px;
+    transform: translateX(-50%); background: linear-gradient(var(--gold), transparent); opacity: .35; }
+  .tl-item { position: relative; width: 50%; padding: 0 36px 46px; }
+  .tl-item:nth-child(odd) { left: 0; text-align: right; }
+  .tl-item:nth-child(even) { left: 50%; text-align: left; }
+  .tl-item .dot { position: absolute; top: 4px; width: 13px; height: 13px; border-radius: 50%;
+    background: var(--gold); box-shadow: 0 0 12px var(--gold); }
+  .tl-item:nth-child(odd) .dot { right: -7px; }
+  .tl-item:nth-child(even) .dot { left: -6px; }
+  .tl-when { font-family: 'Orbitron', sans-serif; color: var(--accent); font-size: 13px; letter-spacing: .1em; }
+  .tl-title { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; color: var(--text); font-weight: 600; margin: 2px 0; }
+  .tl-text { color: var(--muted); font-size: 14px; margin: 0; }
+  .tl-text + .tl-text { margin-top: 10px; }
+  /* centered Q&A story layout */
+  .story-qa { max-width: 760px; margin: 50px auto 0; }
+  .qa-item { margin-bottom: 48px; }
+  .qa-item:last-child { margin-bottom: 0; }
+  .qa-q { font-family: 'Inter', sans-serif; font-weight: 600; color: var(--text);
+    font-size: clamp(17px, 2.2vw, 21px); margin-bottom: 12px; letter-spacing: .01em; }
+  .qa-a { color: var(--muted); font-size: clamp(15px, 1.8vw, 17px); line-height: 1.65;
+    max-width: 62ch; margin: 0 auto; }
+  .qa-a + .qa-a { margin-top: 14px; }
+  .story-outro { max-width: 60ch; margin: 44px auto 0; color: var(--text);
+    font-family: 'Inter', sans-serif; font-weight: 600;
+    font-size: clamp(18px, 2.4vw, 22px); line-height: 1.5; }
+
+  /* auto-scrolling home photo strip */
+  .photo-strip { position: relative; z-index: 10; overflow: hidden; padding: 0;
+    width: 100vw; margin: 0 0 32px; box-sizing: border-box; }
+  .strip-track { display: flex; width: max-content; will-change: transform;
+    animation: marquee 55s linear infinite; }
+  .photo-strip:hover .strip-track { animation-play-state: paused; }
+  .strip-item { flex: 0 0 auto; height: clamp(180px, 26vw, 300px); aspect-ratio: 4/3;
+    margin-right: 0; border-radius: 0; overflow: hidden; border: none;
+    background: linear-gradient(135deg, #dfe1e4, #cdd1d5); }
+  .strip-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .strip-item.ph { display: flex; align-items: center; justify-content: center;
+    aspect-ratio: auto; width: clamp(180px, 28vw, 280px); }
+  .strip-item.ph span { color: var(--muted); font-size: 12px; letter-spacing: .15em; text-transform: uppercase; }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce) { .strip-track { animation: none; } }
+
+  /* ---------- CARDS GRID ---------- */
+  .grid { display: grid; gap: 18px; margin-top: 50px; }
+  .grid.two { grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); }
+  .grid.three { grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); }
+  .card {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 16px;
+    padding: 26px; transition: transform .2s, border-color .2s, box-shadow .2s;
+  }
+  .card:hover { transform: translateY(-3px); border-color: rgba(241,233,107,0.3);
+    box-shadow: 0 14px 40px rgba(0,0,0,0.4); }
+  .card h3 { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 23px; color: var(--text); margin-bottom: 4px; }
+  .card .meta { color: var(--accent); font-size: 13px; letter-spacing: .08em; margin-bottom: 10px; }
+  .card p { color: var(--muted); font-size: 14px; }
+  .card a.maplink { display: inline-block; margin-top: 12px; color: var(--saber-blue);
+    text-decoration: none; font-size: 13px; letter-spacing: .05em; }
+  .card a.maplink:hover { text-decoration: underline; }
+
+  .btn-link {
+    display: inline-flex; align-items: center; justify-content: center;
+    margin-top: 14px; padding: 11px 18px; border-radius: 999px;
+    border: 1px solid var(--gold); color: var(--accent); text-decoration: none;
+    font-family: 'Orbitron', sans-serif; font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+    transition: background .2s, color .2s;
+  }
+  .btn-link:hover { background: var(--gold); color: var(--on-gold); }
+  .reg-handle { margin-top: 10px; font-family: 'Orbitron', sans-serif; font-size: 14px;
+    color: var(--accent); letter-spacing: .04em; word-break: break-all; }
+
+  /* ---------- GALLERY (3-column column-balanced masonry) ---------- */
+  #gallery .inner { max-width: 1100px; }
+  .gallery-wrap { margin-top: 50px; }
+  .gallery { display: flex; gap: 3px; align-items: stretch; }
+  .gallery-wrap .gallery + .gallery { margin-top: 30px; }
+  .gcol { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+  .gallery figure { margin: 0; cursor: pointer; overflow: hidden; line-height: 0;
+    background: linear-gradient(135deg, #dfe1e4, #cdd1d5); }
+  .gallery img { width: 100%; height: 100%; object-fit: cover; display: block; transition: opacity .25s ease; }
+  .gallery figure:hover img { opacity: .88; }
+  .gallery .ph { display: flex; align-items: center; justify-content: center; min-height: 240px;
+    color: var(--muted); font-size: 12px; letter-spacing: .15em; text-transform: uppercase; text-align: center; padding: 10px; }
+  /* lightbox */
+  #lightbox { position: fixed; inset: 0; z-index: 100; background: rgba(2,3,6,0.92);
+    display: none; align-items: center; justify-content: center; padding: 30px; cursor: zoom-out; }
+  #lightbox.open { display: flex; }
+  #lightbox img { max-width: 92vw; max-height: 88vh; border-radius: 10px; box-shadow: 0 0 60px rgba(0,0,0,.6); }
+
+  /* ---------- WEDDING PARTY ---------- */
+  .party { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr));
+    gap: 22px; margin-top: 50px; }
+  .person { text-align: center; }
+  .person .avatar { width: 110px; height: 110px; border-radius: 50%; margin: 0 auto 12px;
+    background: linear-gradient(135deg, #dfe1e4, #cdd1d5); border: 1px solid var(--border);
+    object-fit: cover; }
+  .person .pname { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 20px; color: var(--text); }
+  .person .prole { color: var(--accent); font-size: 12px; letter-spacing: .08em; }
+  .person .pnote { color: var(--muted); font-size: 13px; margin-top: 4px; }
+
+  /* ---------- FAQ ---------- */
+  .faq { margin-top: 46px; max-width: 740px; margin-left: auto; margin-right: auto; }
+  .qa { border: 1px solid var(--border); border-radius: 14px; margin-bottom: 12px; overflow: hidden;
+    background: var(--panel); }
+  .qa button { width: 100%; text-align: left; background: none; border: none; cursor: pointer;
+    color: var(--text); padding: 18px 20px; font-size: 15px; font-family: inherit;
+    display: flex; justify-content: space-between; align-items: center; gap: 14px; }
+  .qa button .plus { color: var(--accent); font-size: 20px; transition: transform .25s; flex: none; }
+  .qa.open button .plus { transform: rotate(45deg); }
+  .qa .ans { max-height: 0; overflow: hidden; transition: max-height .3s ease; }
+  .qa .ans p { padding: 0 20px 18px; color: var(--muted); font-size: 14px; }
+
+  /* ---------- RSVP FORM ---------- */
+  .form-wrap { max-width: 600px; margin: 48px auto 0; background: var(--panel);
+    border: 1px solid var(--border); border-radius: 18px; padding: 30px; }
+  .field { margin-bottom: 18px; text-align: left; }
+  .field label { display: block; font-size: 12px; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 7px; font-family: 'Orbitron', sans-serif; font-weight: 500; }
+  .field input[type=text], .field input[type=email], .field input[type=number],
+  .field select, .field textarea {
+    width: 100%; background: rgba(255,255,255,0.6); border: 1px solid var(--border); border-radius: 10px;
+    color: var(--text); padding: 12px 14px; font-family: inherit; font-size: 15px; transition: border-color .2s; }
+  .field input:focus, .field select:focus, .field textarea:focus {
+    outline: none; border-color: var(--accent); }
+  .field textarea { resize: vertical; min-height: 80px; }
+  .radio-row, .check-row { display: flex; gap: 12px; flex-wrap: wrap; }
+  .pill { flex: 1; min-width: 130px; }
+  .pill input { position: absolute; opacity: 0; }
+  .pill label { display: block; text-align: center; padding: 13px 10px; border: 1px solid var(--border);
+    border-radius: 10px; cursor: pointer; color: var(--muted); transition: all .2s; letter-spacing: .06em;
+    text-transform: none; font-family: inherit; font-size: 14px; margin: 0; }
+  .pill input:checked + label { border-color: var(--accent); color: var(--accent);
+    background: rgba(241,233,107,0.08); }
+  .check-row .pill input:checked + label { color: var(--saber-blue); border-color: var(--saber-blue);
+    background: rgba(77,168,255,0.08); }
+  #mealField { display: none; }
+  .submit {
+    width: 100%; margin-top: 8px; font-family: 'Orbitron', sans-serif; font-weight: 500;
+    letter-spacing: .16em; text-transform: uppercase; font-size: 13px; color: var(--on-gold);
+    background: var(--gold); border: none; padding: 16px; border-radius: 999px; cursor: pointer;
+    transition: transform .15s, box-shadow .15s; }
+  .submit:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(241,233,107,0.35); }
+  .submit:disabled { opacity: .6; cursor: default; transform: none; box-shadow: none; }
+  .form-msg { margin-top: 16px; font-size: 14px; min-height: 20px; }
+  .form-msg.ok { color: var(--saber-green); }
+  .form-msg.err { color: var(--saber-red); }
+
+  /* ---------- FOOTER ---------- */
+  footer { position: relative; z-index: 10; text-align: center; padding: 50px 24px 70px;
+    color: rgba(139,144,165,0.7); font-size: 12px; letter-spacing: .12em; }
+  footer .heart { color: var(--accent); }
+
+  /* ---------- PASSWORD GATE ---------- */
+  #gate { position: fixed; inset: 0; z-index: 200; background: var(--bg);
+    display: none; align-items: center; justify-content: center; flex-direction: column; padding: 24px; text-align: center; }
+  #gate.show { display: flex; }
+  #gate h1 { font-family: 'Orbitron', sans-serif; color: var(--text); font-size: clamp(22px,5vw,34px); margin-bottom: 8px; }
+  #gate p { color: var(--muted); margin-bottom: 22px; }
+  #gate input { background: rgba(255,255,255,0.7); border: 1px solid var(--border); border-radius: 10px;
+    color: var(--text); padding: 13px 16px; font-size: 16px; text-align: center; letter-spacing: .1em; }
+  #gate button { margin-top: 14px; }
+  #gateErr { color: var(--saber-red); font-size: 13px; margin-top: 12px; min-height: 18px; }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 720px) {
+    .timeline::before { left: 18px; }
+    .tl-item { width: 100%; left: 0 !important; text-align: left !important; padding-left: 44px; padding-right: 0; }
+    .tl-item .dot { left: 12px !important; right: auto !important; }
+    nav a { font-size: 9px; padding: 5px 7px; gap: 4px; }
+    nav .trooper { width: 19px; height: 19px; }
+    section { padding: 80px 20px; }
+  }
+  @keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+  @keyframes ignite { from { width: 0; opacity: 0; } to { width: min(260px,60vw); opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { * { animation-duration: .001s !important; } .reveal { transition: none; } }
+</style>
+</head>
+<body>
+  <!-- ===== STAR WARS INTRO LOADER ===== -->
+  <div id="intro">
+    <button id="introSkip" type="button">Skip ›</button>
+    <p class="intro-blue">In a galaxy near you….</p>
+    <div class="intro-logo">
+      <div class="il-names" id="introNames">Jennifer &amp; Josh</div>
+      <div class="il-sub">Are Getting Married</div>
+    </div>
+  </div>
+
+  <canvas id="starfield"></canvas>
+  <canvas id="confetti"></canvas>
+
+  <!-- optional password gate (enabled only if CONFIG.password is set) -->
+  <div id="gate">
+    <h1>Restricted Access</h1>
+    <p>This area is for invited guests of the Rebel Alliance only.</p>
+    <input id="gateInput" type="password" placeholder="Enter passphrase" autocomplete="off" />
+    <button class="submit" style="max-width:260px" id="gateBtn">Enter</button>
+    <div id="gateErr"></div>
+  </div>
+
+  <nav id="nav">
+    <a href="#top">Home</a>
+    <a href="#story">Story</a>
+    <a href="#travel">Travel</a>
+    <a href="#registry">Registry</a>
+    <a href="#gallery">Gallery</a>
+    <a href="#party">Party</a>
+    <a href="#faq" class="acr">FAQ</a>
+    <a href="#rsvp" class="rsvp acr">RSVP</a>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <header class="hero" id="top">
+    <div class="falcon-bg" aria-hidden="true">
+      <svg class="falcon" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+        <g fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+          <!-- main hull -->
+          <circle cx="300" cy="322" r="206"/>
+          <circle cx="300" cy="322" r="158" stroke-opacity=".55"/>
+          <!-- forward mandibles with the iconic front slot -->
+          <path d="M232 156 L232 96 Q232 86 242 86 L286 86 Q296 86 296 96 L296 156"/>
+          <path d="M304 156 L304 96 Q304 86 314 86 L358 86 Q368 86 368 96 L368 156"/>
+          <!-- cockpit neck + pod (front, starboard side) -->
+          <path d="M438 232 L474 206"/>
+          <circle cx="500" cy="188" r="30"/>
+          <line x1="486" y1="176" x2="514" y2="200" stroke-opacity=".55"/>
+          <!-- round sensor dish -->
+          <circle cx="244" cy="244" r="46"/>
+          <circle cx="244" cy="244" r="20" stroke-opacity=".55"/>
+          <!-- central cockpit dome -->
+          <circle cx="300" cy="334" r="66"/>
+          <circle cx="300" cy="334" r="34" stroke-opacity=".6"/>
+          <!-- rear engine band -->
+          <path d="M150 452 Q300 516 450 452" stroke-opacity=".6"/>
+          <!-- hull panel lines -->
+          <g stroke-opacity=".38">
+            <line x1="300" y1="120" x2="300" y2="268"/>
+            <line x1="100" y1="322" x2="232" y2="322"/>
+            <line x1="368" y1="322" x2="500" y2="322"/>
+            <line x1="300" y1="400" x2="300" y2="500"/>
+            <path d="M196 196 L262 262 M404 196 L338 262"/>
+          </g>
+        </g>
+      </svg>
+    </div>
+    <div class="hero-content">
+      <section class="photo-strip" aria-label="Our photos">
+        <div class="strip-track" id="stripTrack"></div>
+      </section>
+      <p class="eyebrow">A New Hope</p>
+      <h1 class="names"><span id="p1">Han</span><span class="amp">&amp;</span><span id="p2">Leia</span></h1>
+      <p class="tagline" id="tagline"></p>
+      <div class="saber"></div>
+      <p class="date" id="date"></p>
+      <p class="venue" id="venue"></p>
+      <div class="countdown" id="countdown">
+        <div class="unit"><span class="num" id="d">00</span><span class="lbl">Days</span></div>
+        <div class="unit"><span class="num" id="h">00</span><span class="lbl">Hours</span></div>
+        <div class="unit"><span class="num" id="m">00</span><span class="lbl">Min</span></div>
+        <div class="unit"><span class="num" id="s">00</span><span class="lbl">Sec</span></div>
+      </div>
+      <a href="#rsvp" class="cta">May the love be with you</a>
+    </div>
+  </header>
+
+  <!-- ===== STORY ===== -->
+  <section id="story"><div class="inner center">
+    <p class="kicker reveal">The Bride &amp; Groom</p>
+    <h2 class="title reveal">Our Story</h2>
+    <div class="saber-sm reveal"></div>
+    <div class="story-qa" id="timeline"></div>
+    <p class="story-outro reveal" id="storyOutro"></p>
+  </div></section>
+
+  <!-- ===== TRAVEL ===== -->
+  <section id="travel"><div class="inner center">
+    <p class="kicker reveal">Travel &amp; Stay</p>
+    <h2 class="title reveal">Getting to the Galaxy</h2>
+    <p class="sub reveal" id="travelNote"></p>
+    <div class="saber-sm reveal"></div>
+    <div class="grid two reveal" id="hotels"></div>
+  </div></section>
+
+  <!-- ===== REGISTRY ===== -->
+  <section id="registry"><div class="inner center">
+    <p class="kicker reveal">Gifts</p>
+    <h2 class="title reveal">Registry</h2>
+    <p class="sub reveal" id="registryNote"></p>
+    <div class="saber-sm reveal"></div>
+    <div class="grid three reveal" id="registries"></div>
+  </div></section>
+
+  <!-- ===== GALLERY ===== -->
+  <section id="gallery"><div class="inner center">
+    <p class="kicker reveal">Moments</p>
+    <h2 class="title reveal">Gallery</h2>
+    <div class="saber-sm reveal"></div>
+    <div class="gallery-wrap reveal" id="galleryGrid"></div>
+  </div></section>
+
+  <!-- ===== WEDDING PARTY ===== -->
+  <section id="party"><div class="inner center">
+    <p class="kicker reveal">The Crew</p>
+    <h2 class="title reveal">Wedding Party</h2>
+    <div class="saber-sm reveal"></div>
+    <div class="party reveal" id="partyGrid"></div>
+  </div></section>
+
+  <!-- ===== FAQ ===== -->
+  <section id="faq"><div class="inner center">
+    <p class="kicker reveal">Good to Know</p>
+    <h2 class="title reveal">FAQ</h2>
+    <div class="saber-sm reveal"></div>
+    <div class="faq reveal" id="faqList"></div>
+  </div></section>
+
+  <!-- ===== RSVP ===== -->
+  <section id="rsvp"><div class="inner center">
+    <p class="kicker reveal">Respond</p>
+    <h2 class="title reveal">RSVP</h2>
+    <div class="saber-sm reveal"></div>
+    <div class="form-wrap reveal" style="text-align:center; padding:52px 30px;">
+      <p style="font-family:'Great Vibes',cursive; font-size:clamp(42px,8vw,68px); line-height:1; color:var(--text);">Coming soon&hellip;</p>
+      <p class="sub" style="margin:14px auto 0;">Our RSVP portal is being prepared &mdash; check back soon to send your response.</p>
+    </div>
+  </div></section>
+
+  <footer>
+    <p>Made with <span class="heart">✦</span> for <span id="footNames">Han &amp; Leia</span></p>
+    <p style="margin-top:8px; opacity:.7;">In a galaxy far, far away…</p>
+  </footer>
+
+  <div id="lightbox"><img src="" alt="" id="lightboxImg" /></div>
+
+<script src="photos.js"></script>
+<script>
+/* =================================================================
+   ★ CONFIG — EDIT EVERYTHING HERE ★
+   ================================================================= */
+const CONFIG = {
+  // --- the basics ---
+  partner1: "Jennifer",
+  partner2: "Josh",
+  date: "2027-03-12T16:00:00",            // YYYY-MM-DDTHH:MM:SS (local time) — drives countdown
+  tagline: "Two become one, in a galaxy far, far away.",
+  venue: "Jersey City, New Jersey",
+
+  // --- RSVP backend: paste your Google Apps Script Web App URL here (see SETUP-GUIDE.md) ---
+  rsvpEndpoint: "PASTE_YOUR_APPS_SCRIPT_URL_HERE",
+  rsvpNote: "Kindly respond by February 12, 2027. We can't wait to celebrate with you.",
+  // events guests can check off when they RSVP:
+  rsvpEventOptions: ["Ceremony", "Reception"],
+  // meal choices (leave array empty [] to hide the meal question):
+  mealOptions: ["Bantha Pot Roast (beef)", "Mon Calamari (seafood)", "Padmé's Garden (vegetarian)", "Younglings Menu (kids)"],
+
+  // --- optional password gate (leave "" to disable) ---
+  password: "",
+
+  // --- OUR STORY (timeline). text can be a string or an array of paragraphs ---
+  story: [
+    { when: "", title: "How did they meet?", text: "As many modern couples do, Hinge!" },
+    { when: "", title: "What was the first date?", text: [
+      "Their first date was virtual! We watched the Buzz Lightyear movie. Jennifer couldn't hear a thing with the noise of Josh's fan on in the background but regardless, it was easy to laugh along with him.",
+      "Their first in-person date was at Zeppelin Hall, where the above photos were taken! We sat next to each other for hours sharing about our lives, our families, and our passions."
+    ] },
+    { when: "", title: "Tell us about the proposal!", text: "Josh's original plan didn't quite go as scheduled — but it turned out perfect anyway. On March 16th, he proposed to Jennifer in front of the castle at Disney's Magic Kingdom, just as the fireworks began to light up the sky." },
+    { when: "", title: "Who is the best dancer?", text: "That is debatable." },
+    { when: "", title: "Jennifer & Josh's favorite Disney movies are…", text: [
+      "Josh loves Toy Story. Go watch the new one, it's so good!",
+      "Jennifer loves The Lion King!"
+    ] },
+    { when: "", title: "Their favorite things to do together are…", text: "We love watching movies, going to the beach, and silly dancing til our knees hurt." },
+  ],
+  storyOutro: "We can't wait for you to be a part of our story, celebrating the beginning of our forever with our favorite people.",
+
+  // --- TRAVEL & STAY ---
+  travelNote: "We'd suggest staying in Jersey City, close to the celebration and full of great options. If you'd prefer to be in Manhattan, New York City is also an option — it's just a short PATH train ride away.",
+  hotels: [
+    { name: "Stay in Jersey City", meta: "Closest to the celebration", note: "Neighborhoods like Newport, Exchange Place, and Grove Street put you minutes from the venue, with waterfront views and easy transit. Popular options include the Hyatt Regency Jersey City, The Westin Jersey City Newport, and Element Harborside.", link: "https://www.google.com/travel/search?q=hotels%20in%20Jersey%20City", linkText: "Browse hotels" },
+    { name: "New York City Option", meta: "~20 minutes by PATH train", note: "If you'd prefer to be in Manhattan, that's an option too. The PATH train connects Jersey City and NYC in about 20 minutes, making it easy to stay in the city and explore before or after the wedding.", link: "https://www.google.com/travel/search?q=hotels%20in%20New%20York%20City", linkText: "Browse hotels" },
+    { name: "Getting Around", meta: "PATH · rideshare", note: "The PATH train links both cities quickly and affordably, and rideshares are easy throughout the area. Detailed directions to the venue will be shared closer to the date.", link: "", linkText: "" },
+    { name: "Parking", meta: "At & near the venue", note: "Parking information for the venue will be shared closer to the date. Nearby garages and street parking are also available throughout the area.", link: "", linkText: "" },
+  ],
+
+  // --- REGISTRY ---
+  registryNote: "Your presence is the greatest gift. But if you wish to give more, here's where we're registered.",
+  registries: [
+    { name: "Amazon", note: "Home & everyday", link: "https://amazon.com" },
+    { name: "Target", note: "Kitchen & nest", link: "https://target.com" },
+    { name: "Honeymoon Fund", note: "Help fuel our adventure to a galaxy far away", link: "https://google.com" },
+    { name: "Venmo", note: "Send a gift directly through Venmo.", handle: "@your-venmo-username", link: "https://venmo.com/u/your-venmo-username", linkText: "Open Venmo →" },
+    { name: "Zelle", note: "Send a gift through Zelle using the email below.", handle: "your-email@example.com" },
+  ],
+
+  // --- GALLERY (add image paths; put files in a /photos folder next to index.html) ---
+  // e.g. "photos/1.jpg". Leave [] to show placeholder tiles.
+  // home photo strip — auto-scrolling band under the hero ([] shows placeholders)
+  homeStrip: [],
+
+  // GALLERY photos are now managed from the photos/gallery folder (the file photos.js is auto-generated).
+  // To change them: add/remove files in photos/gallery, then double-click update-gallery.command.
+  // This array is only a fallback if photos.js is missing.
+  gallery: [],
+
+  // --- WEDDING PARTY ---
+  party: [
+    { name: "Luke", role: "Best Man", note: "Brother of the bride", img: "" },
+    { name: "Chewbacca", role: "Groomsman", note: "Oldest friend", img: "" },
+    { name: "Padmé", role: "Maid of Honor", note: "Sister of the bride", img: "" },
+    { name: "Ahsoka", role: "Bridesmaid", note: "College roommate", img: "" },
+  ],
+
+  // --- FAQ ---
+  faq: [
+    { q: "What's the dress code?", a: "Galactic formal / black-tie optional. Capes welcome but not required." },
+    { q: "Can I bring a plus-one?", a: "Your invitation will specify. If it says '+1', absolutely bring your favorite co-pilot!" },
+    { q: "Are kids welcome?", a: "We love your younglings, but this will be an adults-only celebration (with a few exceptions noted on your invite)." },
+    { q: "Is there parking?", a: "Yes — complimentary parking and valet are available at the venue, plus a shuttle from the host hotels." },
+    { q: "What time should I arrive?", a: "Please arrive by 3:45 PM so we can begin the ceremony promptly at 4:00." },
+  ],
+};
+/* ================================================================= */
+
+
+// ===== inject basics =====
+const $ = s => document.querySelector(s);
+const txt = (sel, v) => { const e = $(sel); if (e) e.textContent = v; };
+txt('#p1', CONFIG.partner1); txt('#p2', CONFIG.partner2);
+txt('#tagline', CONFIG.tagline); txt('#venue', CONFIG.venue);
+txt('#footNames', `${CONFIG.partner1} & ${CONFIG.partner2}`);
+txt('#travelNote', CONFIG.travelNote); txt('#registryNote', CONFIG.registryNote);
+txt('#rsvpNote', CONFIG.rsvpNote);
+document.title = `${CONFIG.partner1} & ${CONFIG.partner2} · Our Wedding`;
+const weddingDate = new Date(CONFIG.date);
+txt('#date', weddingDate.toLocaleDateString(undefined, { weekday:'long', year:'numeric', month:'long', day:'numeric' }));
+
+// ===== countdown =====
+const cd = { d:$('#d'), h:$('#h'), m:$('#m'), s:$('#s') };
+const pad = n => String(n).padStart(2,'0');
+function tick(){
+  const diff = weddingDate - new Date();
+  if (diff <= 0){ $('#countdown').innerHTML = '<div class="unit" style="min-width:auto"><span class="num">The saga continues ✦</span></div>'; clearInterval(timer); return; }
+  const sec = Math.floor(diff/1000);
+  cd.d.textContent = pad(Math.floor(sec/86400));
+  cd.h.textContent = pad(Math.floor((sec%86400)/3600));
+  cd.m.textContent = pad(Math.floor((sec%3600)/60));
+  cd.s.textContent = pad(sec%60);
+}
+tick(); const timer = setInterval(tick, 1000);
+
+// ===== render dynamic sections =====
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+// story
+$('#timeline').innerHTML = CONFIG.story.map(s => {
+  const paras = Array.isArray(s.text) ? s.text : [s.text];
+  const body = paras.map(p => `<p class="qa-a">${esc(p)}</p>`).join('');
+  return `<div class="qa-item">
+    <h3 class="qa-q">${esc(s.title)}</h3>
+    ${body}
+  </div>`;
+}).join('');
+if (CONFIG.storyOutro) txt('#storyOutro', CONFIG.storyOutro);
+
+// home photo strip (duplicated so the marquee loops seamlessly)
+(function buildStrip(){
+  const track = $('#stripTrack'); if (!track) return;
+  const photos = (window.PHOTOS && window.PHOTOS.strip && window.PHOTOS.strip.length) ? window.PHOTOS.strip
+               : (CONFIG.homeStrip && CONFIG.homeStrip.length) ? CONFIG.homeStrip : null;
+  const items = photos
+    ? photos.map(src => `<figure class="strip-item"><img src="${esc(src)}" alt="" loading="lazy"></figure>`).join('')
+    : Array.from({length:6}, () => `<figure class="strip-item ph"><span>Your photo</span></figure>`).join('');
+  track.innerHTML = items + items;
+})();
+
+// hotels
+$('#hotels').innerHTML = CONFIG.hotels.map(h => `
+  <div class="card">
+    <h3>${esc(h.name)}</h3>
+    <div class="meta">${esc(h.meta)}</div>
+    <p>${esc(h.note)}</p>
+    ${h.link ? `<a class="btn-link" href="${esc(h.link)}" target="_blank" rel="noopener">${esc(h.linkText||'Book')}</a>` : ''}
+  </div>`).join('');
+
+// registry
+$('#registries').innerHTML = CONFIG.registries.map(r => `
+  <div class="card">
+    <h3>${esc(r.name)}</h3>
+    <p>${esc(r.note)}</p>
+    ${r.handle ? `<p class="reg-handle">${esc(r.handle)}</p>` : ''}
+    ${r.link ? `<a class="btn-link" href="${esc(r.link)}" target="_blank" rel="noopener">${esc(r.linkText || 'Visit →')}</a>` : ''}
+  </div>`).join('');
+
+// gallery — grouped by subfolder; balanced multi-column mosaic with even bottoms (WithJoy-style)
+const galleryGroups = (window.PHOTOS && window.PHOTOS.galleryGroups && window.PHOTOS.galleryGroups.length)
+  ? window.PHOTOS.galleryGroups
+  : [{ name: '', photos: CONFIG.gallery }];
+const gg = $('#galleryGrid');
+const liveGroups = galleryGroups.filter(g => g.photos && g.photos.length);
+function renderGallery(){
+  if (!liveGroups.length){
+    gg.innerHTML = `<div class="gallery">${Array.from({length:6}, () => `<figure><div class="ph">Your photo here</div></figure>`).join('')}</div>`;
+    return;
+  }
+  gg.innerHTML = '';
+  const wrapW = gg.clientWidth || 1000;
+  const gap = 3;
+  const maxCols = innerWidth <= 560 ? 1 : innerWidth <= 900 ? 2 : 3;
+  liveGroups.forEach(g => {
+    const block = document.createElement('div'); block.className = 'gallery';
+    const n = Math.min(maxCols, g.photos.length);
+    const colW = (wrapW - gap * (n - 1)) / n;
+    const cols = Array.from({length:n}, () => ({ el: document.createElement('div'), items: [], content: 0 }));
+    cols.forEach(c => { c.el.className = 'gcol'; block.appendChild(c.el); });
+    // place each photo in the currently shortest column
+    g.photos.forEach(p => {
+      const src = Array.isArray(p) ? p[0] : p, w = Array.isArray(p) ? (p[1] || 2) : 2, h = Array.isArray(p) ? (p[2] || 3) : 3;
+      const dh = colW * h / w;                                 // displayed height at this column width
+      let min = cols[0]; for (const c of cols) if (c.content < min.content) min = c;
+      min.items.push({ src, dh }); min.content += dh;
+    });
+    // scale each column so all columns end at the same height (clean rectangular block)
+    const H = Math.max(...cols.map(c => c.content + gap * Math.max(0, c.items.length - 1)));
+    cols.forEach(c => {
+      const avail = H - gap * Math.max(0, c.items.length - 1);
+      const factor = c.content > 0 ? avail / c.content : 1;
+      c.items.forEach(it => {
+        const fig = document.createElement('figure'); fig.style.height = (it.dh * factor) + 'px';
+        const img = document.createElement('img'); img.src = it.src; img.alt = ''; img.loading = 'lazy';
+        fig.appendChild(img); c.el.appendChild(fig);
+      });
+    });
+    gg.appendChild(block);
+  });
+}
+renderGallery();
+let galRz; addEventListener('resize', () => { clearTimeout(galRz); galRz = setTimeout(renderGallery, 150); });
+gg.addEventListener('click', e => {
+  const img = e.target.closest('figure')?.querySelector('img');
+  if (img && img.src){ $('#lightboxImg').src = img.src; $('#lightbox').classList.add('open'); }
+});
+$('#lightbox').addEventListener('click', () => $('#lightbox').classList.remove('open'));
+
+// party
+$('#partyGrid').innerHTML = CONFIG.party.map(p => `
+  <div class="person">
+    ${p.img ? `<img class="avatar" src="${esc(p.img)}" alt="${esc(p.name)}">` : `<div class="avatar"></div>`}
+    <div class="pname">${esc(p.name)}</div>
+    <div class="prole">${esc(p.role)}</div>
+    <div class="pnote">${esc(p.note||'')}</div>
+  </div>`).join('');
+
+// faq
+$('#faqList').innerHTML = CONFIG.faq.map(f => `
+  <div class="qa">
+    <button type="button"><span>${esc(f.q)}</span><span class="plus">+</span></button>
+    <div class="ans"><p>${esc(f.a)}</p></div>
+  </div>`).join('');
+$('#faqList').addEventListener('click', e => {
+  const btn = e.target.closest('button'); if (!btn) return;
+  const qa = btn.parentElement; const ans = qa.querySelector('.ans');
+  const open = qa.classList.toggle('open');
+  ans.style.maxHeight = open ? ans.scrollHeight + 'px' : 0;
+});
+
+// ===== nav solid on scroll + scrollspy =====
+const nav = $('#nav');
+addEventListener('scroll', () => nav.classList.toggle('solid', scrollY > 60));
+
+// clicking a nav item (its text OR its helmet) scrolls to that section
+nav.addEventListener('click', e => {
+  const a = e.target.closest('a'); if (!a) return;
+  const href = a.getAttribute('href');
+  if (href && href.startsWith('#')) {
+    const target = document.querySelector(href);
+    if (target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      if (window.__burst) window.__burst(90);
+    }
+  }
+});
+
+// ===== a distinct trooper helmet under each nav label =====
+(function navHelmets(){
+  const OUT = 'M16 3C8 3 6.5 11 7 17.5 7.4 23.5 11 28 16 29 21 28 24.6 23.5 25 17.5 25.5 11 24 3 16 3Z';
+  const svg = inner => `<svg viewBox="0 0 32 32" class="trooper" aria-hidden="true">${inner}</svg>`;
+  const HELMETS = [
+    // 0. Home — Death Star (back to top)
+    svg(`<circle cx="16" cy="16" r="12.5" fill="#c4c8ce" stroke="#9aa0a8" stroke-width="1.1"/>
+      <circle cx="11" cy="11.4" r="3.7" fill="#9aa0a8"/>
+      <circle cx="11" cy="11.4" r="1.7" fill="#6b7077"/>
+      <path d="M3.6 14.2H28.4" stroke="#8b9099" stroke-width="1"/>
+      <path d="M8 20H24M11 24H21" stroke="#aeb4bb" stroke-width=".7"/>
+      <path d="M16 3.6V28.4" stroke="#aeb4bb" stroke-width=".5" opacity=".5"/>`),
+    // 1. Classic Stormtrooper
+    svg(`<path d="${OUT}" fill="#f2f3f5"/>
+      <rect x="7" y="12.2" width="18" height="1.9" rx=".95" fill="#15171c"/>
+      <path d="M10.5 15 15 15.6V19.2L10.8 18.2Z" fill="#15171c"/>
+      <path d="M21.5 15 17 15.6V19.2L21.2 18.2Z" fill="#15171c"/>
+      <rect x="13" y="21.4" width="6" height="3.6" rx=".6" fill="#15171c"/>
+      <path d="M15 21.4V25M17 21.4V25" stroke="#f2f3f5" stroke-width=".8"/>`),
+    // 2. TIE Fighter Pilot (black + side life-support)
+    svg(`<path d="${OUT}" fill="#1b1e25"/>
+      <rect x="8" y="12.4" width="16" height="3.6" rx="1.8" fill="#3a4049"/>
+      <circle cx="8.6" cy="20" r="2.1" fill="#3a4049"/>
+      <circle cx="23.4" cy="20" r="2.1" fill="#3a4049"/>
+      <rect x="13.5" y="22" width="5" height="2.6" rx=".5" fill="#3a4049"/>
+      <path d="M8.6 22Q7 24 7.5 26" stroke="#3a4049" stroke-width="1.1" fill="none"/>`),
+    // 4. Snowtrooper (breather mask + visor band)
+    svg(`<path d="${OUT}" fill="#eef0f3"/>
+      <rect x="8" y="12.4" width="16" height="3.4" rx="1.7" fill="#15171c"/>
+      <path d="M9 18Q9 17 11 17H21Q23 17 23 18V24Q23 27 16 27.6Q9 27 9 24Z" fill="#c2c6cc"/>
+      <path d="M12.5 21H19.5M12.5 23H19.5" stroke="#7c828a" stroke-width=".8"/>
+      <rect x="15.4" y="17" width="1.2" height="9" fill="#9aa0a8"/>`),
+    // 5. Scout Trooper (wide wraparound visor)
+    svg(`<path d="${OUT}" fill="#f2f3f5"/>
+      <path d="M7.6 12.5Q16 10.8 24.4 12.5L23.6 17.2Q16 19.2 8.4 17.2Z" fill="#15171c"/>
+      <rect x="13" y="21.6" width="6" height="2.6" rx=".6" fill="#15171c"/>
+      <path d="M9 14.5Q16 13 23 14.5" stroke="#3a3f48" stroke-width=".5" fill="none"/>`),
+    // 6. First Order Stormtrooper (central visor stripe)
+    svg(`<path d="${OUT}" fill="#f4f5f7"/>
+      <rect x="7.5" y="12.2" width="17" height="1.7" rx=".85" fill="#15171c"/>
+      <rect x="14.6" y="11.5" width="2.8" height="10" rx="1.2" fill="#15171c"/>
+      <path d="M11 15 14 15.5V19L11.2 18.2Z" fill="#2c313a"/>
+      <path d="M21 15 18 15.5V19L20.8 18.2Z" fill="#2c313a"/>
+      <rect x="13.3" y="22" width="5.4" height="2.8" rx=".5" fill="#15171c"/>`),
+    // 7. Death Trooper (black with grey detailing)
+    svg(`<path d="${OUT}" fill="#16181d"/>
+      <rect x="7" y="12.2" width="18" height="1.9" rx=".95" fill="#3a4049"/>
+      <path d="M10.5 15 15 15.6V19.2L10.8 18.2Z" fill="#3a4049"/>
+      <path d="M21.5 15 17 15.6V19.2L21.2 18.2Z" fill="#3a4049"/>
+      <rect x="13" y="21.4" width="6" height="3.6" rx=".6" fill="#3a4049"/>
+      <path d="M15 21.4V25M17 21.4V25" stroke="#16181d" stroke-width=".8"/>`),
+    // 8. RSVP — diamond wedding ring
+    svg(`<path d="M11 11 L13.2 7.5 L18.8 7.5 L21 11 L16 16.5 Z" fill="#d4ecf6" stroke="#7fb0c6" stroke-width=".8" stroke-linejoin="round"/>
+      <path d="M13.2 7.5 L16 11 L18.8 7.5 M11 11 H21 M16 11 V16.5" fill="none" stroke="#93bccf" stroke-width=".7"/>
+      <circle cx="16" cy="22" r="6.4" fill="none" stroke="#8a8f97" stroke-width="2.8"/>
+      <circle cx="16" cy="22" r="6.4" fill="none" stroke="#eceef0" stroke-width=".9"/>`),
+  ];
+  document.querySelectorAll('nav a').forEach((a, i) => {
+    if (HELMETS[i]) a.insertAdjacentHTML('beforeend', HELMETS[i]);
+  });
+})();
+
+// ===== scroll reveals =====
+const io = new IntersectionObserver(entries => {
+  entries.forEach(en => { if (en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+// ===== RSVP form is disabled for now (showing "Coming soon") =====
+
+// ===== PASSWORD GATE =====
+(function gate(){
+  if (!CONFIG.password) return;
+  if (sessionStorage.getItem('wedding_ok') === '1') return;
+  const g = $('#gate'); g.classList.add('show');
+  const check = () => {
+    if ($('#gateInput').value === CONFIG.password){ sessionStorage.setItem('wedding_ok','1'); g.classList.remove('show'); }
+    else { $('#gateErr').textContent = 'These aren’t the droids… wrong passphrase.'; }
+  };
+  $('#gateBtn').addEventListener('click', check);
+  $('#gateInput').addEventListener('keydown', e => { if (e.key === 'Enter') check(); });
+})();
+
+// ===== STARFIELD =====
+const sky = $('#starfield'), sctx = sky.getContext('2d');
+let stars=[], W, H, mx=0, my=0;
+function sizeStars(){
+  W = sky.width = innerWidth*devicePixelRatio; H = sky.height = innerHeight*devicePixelRatio;
+  const n = Math.min(220, Math.floor(innerWidth*innerHeight/7000));
+  stars = Array.from({length:n}, () => ({ x:Math.random()*W, y:Math.random()*H, z:Math.random()*0.8+0.2, tw:Math.random()*6.28, sp:Math.random()*0.02+0.005 }));
+}
+sizeStars(); addEventListener('resize', sizeStars);
+addEventListener('mousemove', e => { mx = e.clientX/innerWidth-0.5; my = e.clientY/innerHeight-0.5; });
+(function drawStars(){
+  sctx.clearRect(0,0,W,H);
+  for (const st of stars){
+    st.tw += st.sp;
+    const a = 0.35 + Math.sin(st.tw)*0.35 + 0.3;
+    const px = st.x + mx*st.z*40*devicePixelRatio, py = st.y + my*st.z*40*devicePixelRatio;
+    sctx.beginPath(); sctx.arc(px, py, st.z*1.4*devicePixelRatio, 0, 6.2832);
+    sctx.fillStyle = `rgba(60,66,76,${a*0.30})`; sctx.fill();
+  }
+  requestAnimationFrame(drawStars);
+})();
+
+// ===== STAR / SABER CONFETTI =====
+const cc = $('#confetti'), cctx = cc.getContext('2d');
+let pieces=[], running=false;
+function sizeCon(){ cc.width = innerWidth*devicePixelRatio; cc.height = innerHeight*devicePixelRatio; }
+sizeCon(); addEventListener('resize', sizeCon);
+const SABER_COLORS = ['#4da8ff','#57ff8a','#ff4d4d','#c46bff','#ffe81f'];
+const PASTELS = ['#f8c1d0','#ffd9b8','#fbe6a0','#bfe6cf','#d6c2ef','#c6dcf2','#f7c9e3','#cdeccf'];
+// shape mix (flowers & Grogu appear a little more often):
+const TYPES = ['grogu','trooper','vader','saber','grogu','flower','flower','flower','saber'];
+
+// --- Grogu (Baby Yoda) ---
+function drawGrogu(c, s){
+  c.fillStyle = '#c7a96b';                                  // robe
+  c.beginPath(); c.moveTo(-s*0.55,s*0.95); c.lineTo(s*0.55,s*0.95);
+  c.lineTo(s*0.32,s*0.28); c.lineTo(-s*0.32,s*0.28); c.closePath(); c.fill();
+  c.fillStyle = '#9aa86f';                                  // ears
+  c.beginPath(); c.ellipse(-s*0.92,-s*0.02,s*0.5,s*0.2,-0.35,0,6.2832); c.fill();
+  c.beginPath(); c.ellipse(s*0.92,-s*0.02,s*0.5,s*0.2,0.35,0,6.2832); c.fill();
+  c.fillStyle = '#aebd8a';                                  // head
+  c.beginPath(); c.ellipse(0,-s*0.12,s*0.62,s*0.56,0,0,6.2832); c.fill();
+  c.fillStyle = '#16170f';                                  // eyes
+  c.beginPath(); c.ellipse(-s*0.24,-s*0.08,s*0.12,s*0.17,0,0,6.2832); c.fill();
+  c.beginPath(); c.ellipse(s*0.24,-s*0.08,s*0.12,s*0.17,0,0,6.2832); c.fill();
+}
+
+// --- Stormtrooper helmet ---
+function drawTrooper(c, s){
+  c.fillStyle = '#f2f3f5';
+  c.beginPath(); c.moveTo(-s*0.6,-s*0.2);
+  c.quadraticCurveTo(-s*0.6,-s*0.95,0,-s*0.95);
+  c.quadraticCurveTo(s*0.6,-s*0.95,s*0.6,-s*0.2);
+  c.quadraticCurveTo(s*0.55,s*0.5,0,s*0.95);
+  c.quadraticCurveTo(-s*0.55,s*0.5,-s*0.6,-s*0.2); c.closePath(); c.fill();
+  c.fillStyle = '#15171c';                                  // eyes
+  c.beginPath(); c.moveTo(-s*0.5,-s*0.18); c.lineTo(-s*0.12,-s*0.06);
+  c.lineTo(-s*0.12,s*0.16); c.lineTo(-s*0.46,s*0.1); c.closePath(); c.fill();
+  c.beginPath(); c.moveTo(s*0.5,-s*0.18); c.lineTo(s*0.12,-s*0.06);
+  c.lineTo(s*0.12,s*0.16); c.lineTo(s*0.46,s*0.1); c.closePath(); c.fill();
+  c.fillRect(-s*0.2,s*0.34,s*0.4,s*0.3);                    // mouth vent
+  c.fillStyle = '#f2f3f5';
+  c.fillRect(-s*0.06,s*0.34,s*0.03,s*0.3); c.fillRect(s*0.05,s*0.34,s*0.03,s*0.3);
+}
+
+// --- Darth Vader helmet ---
+function drawVader(c, s){
+  c.fillStyle = '#0c0c0e';
+  c.beginPath(); c.moveTo(0,-s);
+  c.bezierCurveTo(s*0.9,-s,s*0.72,-s*0.1,s*0.56,s*0.2);
+  c.lineTo(s*0.56,s*0.5); c.quadraticCurveTo(s*0.42,s*0.96,0,s*0.96);
+  c.quadraticCurveTo(-s*0.42,s*0.96,-s*0.56,s*0.5); c.lineTo(-s*0.56,s*0.2);
+  c.bezierCurveTo(-s*0.72,-s*0.1,-s*0.9,-s,0,-s); c.closePath(); c.fill();
+  c.fillStyle = '#3a3d44';                                  // eye lenses
+  c.beginPath(); c.moveTo(-s*0.46,-s*0.05); c.lineTo(-s*0.1,s*0.06); c.lineTo(-s*0.4,s*0.2); c.closePath(); c.fill();
+  c.beginPath(); c.moveTo(s*0.46,-s*0.05); c.lineTo(s*0.1,s*0.06); c.lineTo(s*0.4,s*0.2); c.closePath(); c.fill();
+  c.fillStyle = '#26282e';                                  // mouth grille
+  c.fillRect(-s*0.2,s*0.42,s*0.4,s*0.3);
+  c.fillStyle = '#0c0c0e';
+  for (let i=-2;i<=2;i++) c.fillRect(i*s*0.08-s*0.012,s*0.42,s*0.03,s*0.3);
+  c.fillStyle = 'rgba(255,255,255,0.12)';                   // highlight
+  c.beginPath(); c.ellipse(-s*0.22,-s*0.5,s*0.12,s*0.26,0.3,0,6.2832); c.fill();
+}
+
+// --- Lightsaber ---
+function drawSaber(c, s, color){
+  c.fillStyle = '#9aa0a6';                                  // hilt
+  c.fillRect(-s*0.15,s*0.35,s*0.3,s*0.72);
+  c.fillStyle = '#5a5f66';
+  c.fillRect(-s*0.15,s*0.6,s*0.3,s*0.07); c.fillRect(-s*0.15,s*0.82,s*0.3,s*0.06);
+  c.fillStyle = '#c8ccd0';                                  // emitter
+  c.fillRect(-s*0.17,s*0.28,s*0.34,s*0.09);
+  c.shadowColor = color; c.shadowBlur = 9*devicePixelRatio; // glowing blade
+  c.fillStyle = color;
+  c.fillRect(-s*0.1,-s*1.15,s*0.2,s*1.45);
+  c.beginPath(); c.arc(0,-s*1.15,s*0.1,0,6.2832); c.fill();
+  c.shadowBlur = 0;
+  c.fillStyle = 'rgba(255,255,255,0.85)';                   // white core
+  c.fillRect(-s*0.035,-s*1.12,s*0.07,s*1.4);
+}
+
+// --- Pastel flowers (a few different blooms) ---
+function flBlossom(c, s, col){                                // rounded 5-petal
+  c.fillStyle = col;
+  for (let i=0;i<5;i++){ c.save(); c.rotate(i*1.25664);
+    c.beginPath(); c.ellipse(0,-s*0.58,s*0.36,s*0.56,0,0,6.2832); c.fill(); c.restore(); }
+  c.fillStyle = '#f6d98a'; c.beginPath(); c.arc(0,0,s*0.3,0,6.2832); c.fill();
+  c.fillStyle = '#dba53a'; c.beginPath(); c.arc(0,0,s*0.16,0,6.2832); c.fill();
+}
+function flDaisy(c, s, col){                                  // many thin petals
+  c.fillStyle = col;
+  for (let i=0;i<12;i++){ c.save(); c.rotate(i*0.5236);
+    c.beginPath(); c.ellipse(0,-s*0.7,s*0.12,s*0.62,0,0,6.2832); c.fill(); c.restore(); }
+  c.fillStyle = '#f4c95d'; c.beginPath(); c.arc(0,0,s*0.34,0,6.2832); c.fill();
+  c.fillStyle = '#dba53a'; c.beginPath(); c.arc(0,0,s*0.18,0,6.2832); c.fill();
+}
+function flRose(c, s, col){                                   // layered round rose
+  c.fillStyle = col; c.beginPath(); c.arc(0,0,s*0.82,0,6.2832); c.fill();
+  c.strokeStyle = 'rgba(120,40,70,0.18)'; c.lineWidth = s*0.1; c.lineCap = 'round';
+  c.beginPath(); c.arc(0,0,s*0.55,0.3,4.3); c.stroke();
+  c.beginPath(); c.arc(0,0,s*0.34,1.8,5.6); c.stroke();
+  c.beginPath(); c.arc(0,0,s*0.16,0.5,4.5); c.stroke();
+  c.fillStyle = 'rgba(255,255,255,0.16)'; c.beginPath(); c.arc(-s*0.22,-s*0.22,s*0.2,0,6.2832); c.fill();
+}
+function flCherry(c, s, col){                                 // notched cherry-blossom petals
+  c.fillStyle = col;
+  for (let i=0;i<5;i++){ c.save(); c.rotate(i*1.25664);
+    c.beginPath(); c.moveTo(0,-s*0.05);
+    c.quadraticCurveTo(-s*0.46,-s*0.5,-s*0.14,-s*0.9);
+    c.quadraticCurveTo(0,-s*0.74,s*0.14,-s*0.9);
+    c.quadraticCurveTo(s*0.46,-s*0.5,0,-s*0.05);
+    c.closePath(); c.fill(); c.restore(); }
+  c.fillStyle = '#eaa0bc'; c.beginPath(); c.arc(0,0,s*0.18,0,6.2832); c.fill();
+}
+const FLOWER_SHAPES = [flBlossom, flDaisy, flRose, flCherry];
+// ---- pre-render each shape once to an offscreen sprite (drawn every frame as an image) ----
+const S0 = 18;                                       // canonical shape radius baked into sprites
+const SP = Math.ceil((2.8*S0 + 14) * devicePixelRatio);  // sprite px (extra margin for glow/shadow)
+const F  = SP / (S0 * devicePixelRatio);             // sprite px → world px scale factor
+function makeSprite(fn){
+  const cv = document.createElement('canvas'); cv.width = cv.height = SP;
+  const x = cv.getContext('2d'); x.translate(SP/2, SP/2);
+  x.shadowColor = 'rgba(0,0,0,0.28)'; x.shadowBlur = 4*devicePixelRatio; x.shadowOffsetY = 2*devicePixelRatio;
+  fn(x, S0*devicePixelRatio); return cv;
+}
+const SPRITES = { grogu: makeSprite(drawGrogu), trooper: makeSprite(drawTrooper), vader: makeSprite(drawVader) };
+const SABER_SPRITES = SABER_COLORS.map(col => makeSprite((x,s) => drawSaber(x, s, col)));
+const FLOWER_SPRITES = [];
+FLOWER_SHAPES.forEach(fn => PASTELS.forEach(col => FLOWER_SPRITES.push(makeSprite((x,s) => fn(x, s, col)))));
+
+function burst(count=130){
+  const cx = cc.width/2, cy = cc.height*0.42;
+  for (let i=0;i<count;i++){
+    const ang = Math.random()*6.2832, sp = (Math.random()*4.5+1.8)*devicePixelRatio;
+    const type = TYPES[(Math.random()*TYPES.length)|0];
+    const r = (Math.random()*6+9)*devicePixelRatio;
+    const sprite = type==='saber'  ? SABER_SPRITES[(Math.random()*SABER_SPRITES.length)|0]
+                 : type==='flower' ? FLOWER_SPRITES[(Math.random()*FLOWER_SPRITES.length)|0]
+                 : SPRITES[type];
+    pieces.push({ x:cx, y:cy, vx:Math.cos(ang)*sp, vy:Math.sin(ang)*sp-3.5*devicePixelRatio,
+      size:F*r, sprite, rot:Math.random()*6.2832, vr:(Math.random()-0.5)*0.07, life:1 });
+  }
+  if (!running){ running = true; runCon(); }
+}
+window.__burst = burst;
+function runCon(){
+  cctx.clearRect(0,0,cc.width,cc.height);
+  const g = 0.07*devicePixelRatio;
+  for (const p of pieces){
+    p.vy += g; p.vx *= 0.985; p.vy *= 0.99; p.x += p.vx; p.y += p.vy; p.rot += p.vr; p.life -= 0.0034;
+    const sz = p.size;
+    cctx.globalAlpha = p.life < 0 ? 0 : p.life;
+    cctx.save(); cctx.translate(p.x,p.y); cctx.rotate(p.rot);
+    cctx.drawImage(p.sprite, -sz/2, -sz/2, sz, sz);
+    cctx.restore();
+  }
+  cctx.globalAlpha = 1;
+  pieces = pieces.filter(p => p.life>0 && p.y < cc.height+60);
+  if (pieces.length) requestAnimationFrame(runCon);
+  else { cctx.clearRect(0,0,cc.width,cc.height); running = false; }
+}
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+// the opening confetti is fired by the intro loader when it finishes (see intro section below)
+$('.cta')?.addEventListener('click', () => burst(130));
+
+// ===== Star Wars intro loader =====
+(function intro(){
+  const intro = document.getElementById('intro');
+  if (!intro) return;
+  const n = document.getElementById('introNames');
+  if (n) n.textContent = `${CONFIG.partner1} & ${CONFIG.partner2}`;
+  document.body.classList.add('intro-active');
+  let done = false;
+  function reveal(){
+    if (done) return; done = true;
+    intro.classList.add('done');
+    document.body.classList.remove('intro-active');
+    setTimeout(() => intro.remove(), 900);
+    if (!reduced && window.__burst) setTimeout(() => window.__burst(120), 150);
+  }
+  if (reduced){ reveal(); return; }                 // skip the cinematic for reduced-motion users
+  const t = setTimeout(reveal, 6700);               // total run time of the intro
+  document.getElementById('introSkip').addEventListener('click', () => { clearTimeout(t); reveal(); });
+})();
+</script>
+</body>
+</html>
