@@ -255,7 +255,7 @@
 
   /* ---------- CARDS GRID ---------- */
   .grid { display: grid; gap: 18px; margin-top: 50px; }
-  .grid.two { grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); }
+  .grid.two { grid-template-columns: repeat(2, 1fr); }
   .grid.three { grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); }
   .card {
     background: var(--panel); border: 1px solid var(--border); border-radius: 16px;
@@ -385,6 +385,7 @@
     .tl-item .dot { left: 12px !important; right: auto !important; }
     nav a { font-size: 9px; padding: 5px 7px; gap: 4px; }
     nav .trooper { width: 19px; height: 19px; }
+    .grid.two, .grid.three { grid-template-columns: 1fr; }
     section { padding: 80px 20px; }
   }
   @keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
